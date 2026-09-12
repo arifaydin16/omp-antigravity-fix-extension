@@ -1,0 +1,12 @@
+﻿{
+  "name": "antigravity-fix",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "index.js",
+  "omp": {
+    "extensions": ["./index.js"]
+  },
+  "pi": {
+    "extensions": ["./index.js"]
+  }
+}
