@@ -1,21 +1,12 @@
-﻿function sanitize(str) {
-  if (typeof str !== "string") return str;
-  return str
-    .replaceAll("<system-conventions>", "<conventions>")
-    .replaceAll("</system-conventions>", "</conventions>")
-    .replaceAll("<system_conventions>", "<conventions>")
-    .replaceAll("</system_conventions>", "</conventions>");
-}
-
-export default function (omp) {
-  omp.on("before_agent_start", (event) => {
-    if (!event || !event.systemPrompt) return;
-    if (Array.isArray(event.systemPrompt)) {
-      for (let i = 0; i < event.systemPrompt.length; i++) {
-        event.systemPrompt[i] = sanitize(event.systemPrompt[i]);
+export default function (omp: any) {
+  omp.on("before_provider_request", async (event: any) => {
+    if (event?.payload && typeof event.payload === "object") {
+      const payload = event.payload as Record<string, unknown>;
+      // Omit requestType when targeting Google Antigravity to match official client
+      if (payload.userAgent === "antigravity" && "requestType" in payload) {
+        delete payload.requestType;
       }
-    } else if (typeof event.systemPrompt === "string") {
-      event.systemPrompt = sanitize(event.systemPrompt);
     }
+    return event.payload;
   });
 }
